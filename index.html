@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mama Kitchen Nakuru — Nakuru's Hidden Gem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --char:#1B1410;
+    --char2:#2A1E16;
+    --ember:#D9551D;
+    --ember-light:#F2783E;
+    --gold:#E8A33D;
+    --green:#5C7A4E;
+    --cream:#F5ECDD;
+    --cream-dim:#cfc2ac;
+    --line: rgba(245,236,221,0.14);
+    --radius: 4px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--char);
+    color:var(--cream);
+    font-family:'Lora', serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    line-height:1.05;
+    color:var(--cream);
+    margin:0 0 .4em;
+  }
+  .mono{font-family:'Space Mono', monospace;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    font-size:.72rem;
+    color:var(--ember-light);
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:200;
+    background:rgba(27,20,16,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .navbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; max-width:1180px; margin:0 auto;
+  }
+  .brand{
+    font-family:'Anton',sans-serif; font-size:1.25rem; letter-spacing:.04em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .ember-dot{width:10px;height:10px;border-radius:50%;background:var(--ember);
+    box-shadow:0 0 12px 3px rgba(217,85,29,.8); animation:flicker 2.4s infinite ease-in-out;}
+  @keyframes flicker{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(.8);}}
+
+  .navlinks{display:flex;gap:28px;list-style:none;margin:0;padding:0;font-family:'Space Mono',monospace;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;}
+  .navlinks a{text-decoration:none;opacity:.85;transition:opacity .2s, color .2s;border-bottom:1px solid transparent;padding-bottom:4px;}
+  .navlinks a:hover{opacity:1;color:var(--ember-light);border-color:var(--ember-light);}
+
+  .menu-icon{
+    background:none;border:1px solid var(--line);color:var(--cream);
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer; font-size:1.1rem; transition:border-color .2s, background .2s;
+  }
+  .menu-icon:hover{border-color:var(--ember);background:rgba(217,85,29,.15);}
+  .navlinks-mobile-toggle{display:none;}
+
+  @media (max-width:860px){
+    .navlinks{display:none;}
+  }
+
+  /* ---------- DRAWER (owner menu) ---------- */
+  .drawer-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;
+    opacity:0;pointer-events:none;transition:opacity .25s;
+  }
+  .drawer-overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:-340px;width:320px;height:100%;
+    background:var(--char2);z-index:301;padding:28px 22px;
+    transition:right .3s ease; border-left:1px solid var(--line);
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .drawer.open{right:0;}
+  .drawer h3{font-size:1rem;}
+  .drawer-close{align-self:flex-end;background:none;border:none;color:var(--cream);font-size:1.4rem;cursor:pointer;}
+  .drawer label{font-family:'Space Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--cream-dim);}
+  .drawer input[type=password]{
+    background:var(--char);border:1px solid var(--line);color:var(--cream);
+    padding:10px 12px;border-radius:var(--radius);font-family:'Lora',serif;width:100%;
+  }
+  .btn{
+    font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;
+    background:var(--ember);color:var(--char);border:none;padding:12px 18px;border-radius:var(--radius);
+    cursor:pointer;transition:background .2s, transform .15s;text-align:center;display:inline-block;
+  }
+  .btn:hover{background:var(--ember-light);transform:translateY(-1px);}
+  .btn.outline{background:none;border:1px solid var(--cream);color:var(--cream);}
+  .btn.outline:hover{border-color:var(--ember-light);color:var(--ember-light);background:none;}
+  .btn.small{padding:8px 12px;font-size:.68rem;}
+  .drawer-status{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--green);}
+  .drawer hr{border:none;border-top:1px solid var(--line);width:100%;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; min-height:100vh; display:flex; align-items:center;
+    padding-top:90px;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(217,85,29,.18), transparent 55%),
+      radial-gradient(ellipse at 80% 80%, rgba(92,122,78,.14), transparent 55%),
+      var(--char);
+  }
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center;width:100%;}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.6rem);}
+  .hero .tagline{font-style:italic;font-family:'Lora',serif;color:var(--cream-dim);font-size:1.05rem;margin:18px 0 30px;max-width:480px;}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
+
+  .upload-frame{
+    position:relative;
+    border:2px dashed var(--line);
+    border-radius:8px;
+    min-height:340px;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    background:var(--char2);
+    overflow:hidden;
+    text-align:center;
+  }
+  .upload-frame img.uploaded{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .upload-frame .placeholder{color:var(--cream-dim);font-family:'Space Mono',monospace;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;z-index:1;}
+  .upload-frame .placeholder svg{opacity:.5;margin-bottom:10px;}
+  .upload-frame input[type=file]{display:none;}
+  .upload-frame .owner-controls{
+    position:absolute;bottom:10px;right:10px;display:none;gap:8px;z-index:2;
+  }
+  body.owner-mode .upload-frame .owner-controls{display:flex;}
+  body.owner-mode .upload-frame{border-color:var(--ember);}
+
+  /* ---------- SECTIONS GENERIC ---------- */
+  section{padding:96px 0;}
+  .section-head{margin-bottom:46px;max-width:640px;}
+  .section-head h2{font-size:clamp(2rem,4vw,2.8rem);}
+  .divider{height:1px;background:var(--line);width:100%;}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  @media(max-width:900px){.about-grid{grid-template-columns:1fr;}}
+  .about-grid .upload-frame{min-height:380px;}
+  .about-grid p{color:var(--cream-dim);}
+  .about-note{
+    margin-top:22px;border-left:3px solid var(--green);padding-left:16px;
+    font-family:'Space Mono',monospace;font-size:.82rem;color:var(--green);
+  }
+
+  /* ---------- WHAT TO TRY ---------- */
+  .dish-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;}
+  @media(max-width:900px){.dish-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.dish-grid{grid-template-columns:1fr;}}
+  .dish-card{background:var(--char2);border-radius:8px;overflow:hidden;border:1px solid var(--line);}
+  .dish-card .upload-frame{min-height:200px;border-radius:0;border:none;border-bottom:1px solid var(--line);}
+  .dish-card .dish-body{padding:20px;}
+  .dish-card h3{font-size:1.1rem;margin-bottom:8px;}
+  .dish-card p{font-size:.88rem;color:var(--cream-dim);margin:0;}
+
+  /* ---------- WHY PEOPLE LOVE US ---------- */
+  .quote-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+  @media(max-width:700px){.quote-grid{grid-template-columns:1fr;}}
+  .quote-card{
+    background:var(--char2);border:1px solid var(--line);border-radius:8px;padding:26px;
+    position:relative;
+  }
+  .quote-card::before{content:"“";font-family:'Anton',sans-serif;font-size:3rem;color:var(--ember);
+    position:absolute;top:6px;left:14px;opacity:.5;}
+  .quote-card p{margin:0;padding-left:20px;font-style:italic;color:var(--cream-dim);}
+  .quote-card.stat{display:flex;align-items:center;gap:16px;padding-left:32px;}
+  .quote-card.stat .num{font-family:'Anton',sans-serif;font-size:2.2rem;color:var(--gold);}
+
+  /* ---------- OFFERS ---------- */
+  .offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  @media(max-width:900px){.offer-grid{grid-template-columns:1fr;}}
+  .offer-card{
+    background:linear-gradient(160deg, var(--char2), var(--char));
+    border:1px solid var(--line); border-top:3px solid var(--gold);
+    border-radius:6px; padding:26px;
+  }
+  .offer-card .eyebrow{color:var(--gold);}
+  .offer-card h3{font-size:1.15rem;margin:8px 0 10px;}
+  .offer-card p{color:var(--cream-dim);font-size:.9rem;margin:0;}
+
+  /* ---------- MENU ---------- */
+  .menu-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;}
+  .tab-btn{
+    font-family:'Space Mono',monospace;text-transform:uppercase;font-size:.74rem;letter-spacing:.06em;
+    background:none;border:1px solid var(--line);color:var(--cream-dim);padding:9px 16px;border-radius:99px;
+    cursor:pointer;transition:all .2s;
+  }
+  .tab-btn.active, .tab-btn:hover{border-color:var(--ember);color:var(--ember-light);}
+  .menu-cat{display:none;}
+  .menu-cat.active{display:block;}
+  .menu-cat h3{color:var(--gold);font-size:1.3rem;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:18px;}
+  .menu-list{list-style:none;padding:0;margin:0 0 36px;}
+  .menu-row{
+    display:flex; justify-content:space-between; align-items:baseline; gap:14px;
+    padding:14px 0; border-bottom:1px dashed var(--line);
+  }
+  .menu-row .name{font-family:'Lora',serif;font-size:1.02rem;}
+  .menu-row .sub{display:block;font-size:.78rem;color:var(--cream-dim);font-style:italic;}
+  .menu-row .price{font-family:'Space Mono',monospace;color:var(--gold);white-space:nowrap;}
+  .menu-row .book-link{
+    font-family:'Space Mono',monospace;font-size:.66rem;text-transform:uppercase;color:var(--ember-light);
+    text-decoration:none;border:1px solid var(--ember-light);padding:4px 9px;border-radius:99px;margin-left:10px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:80px 0 40px;background:var(--char2);border-top:1px solid var(--line);}
+  .footer-grid{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:50px;}
+  @media(max-width:860px){.footer-grid{grid-template-columns:1fr;}}
+  footer h2{font-size:2rem;}
+  footer .swahili{font-style:italic;color:var(--gold);}
+  .contact-list{list-style:none;padding:0;margin:18px 0;font-family:'Space Mono',monospace;font-size:.85rem;}
+  .contact-list li{margin-bottom:10px;color:var(--cream-dim);}
+  .contact-list a{color:var(--cream);text-decoration:none;}
+  .contact-list a:hover{color:var(--ember-light);}
+  .map-frame{border-radius:8px;overflow:hidden;border:1px solid var(--line);min-height:220px;}
+  .map-frame iframe{width:100%;height:220px;border:0;filter:grayscale(.3) invert(.92) contrast(.9);}
+  .footer-bottom{
+    margin-top:60px;padding-top:24px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+    font-family:'Space Mono',monospace;font-size:.72rem;color:var(--cream-dim);
+  }
+  .whatsapp-float{
+    position:fixed;bottom:24px;right:24px;z-index:150;
+    background:var(--ember);color:var(--char);width:56px;height:56px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;text-decoration:none;
+    box-shadow:0 6px 18px rgba(217,85,29,.5);transition:transform .2s;
+  }
+  .whatsapp-float:hover{transform:scale(1.08);}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.shown{opacity:1;transform:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{transition:none;opacity:1;transform:none;}
+    .brand .ember-dot{animation:none;}
+  }
+
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="navbar">
+    <div class="brand"><span class="ember-dot"></span> Mama Kitchen <span class="mono" style="font-size:.7rem;color:var(--cream-dim);font-family:'Space Mono',monospace;text-transform:none;letter-spacing:0;">Nakuru</span></div>
+    <ul class="navlinks">
+      <li><a href="#about">About Us</a></li>
+      <li><a href="#try">What to Try</a></li>
+      <li><a href="#love">Why People Love Us</a></li>
+      <li><a href="#offers">Special Offers</a></li>
+      <li><a href="#menu">See Menu</a></li>
+      <li><a href="#footer">Find Us</a></li>
+    </ul>
+    <button class="menu-icon" id="drawerToggle" aria-label="Open owner menu">☰</button>
+  </div>
+</header>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+  <button class="drawer-close" id="drawerClose" aria-label="Close menu">×</button>
+  <h3>Owner Login</h3>
+  <div id="loginPane">
+    <label for="ownerPass">Password</label>
+    <input type="password" id="ownerPass" placeholder="••••••••">
+    <button class="btn" id="loginBtn" style="margin-top:14px;width:100%;">Log In</button>
+    <p class="mono" id="loginError" style="color:var(--ember-light);font-size:.72rem;display:none;">Incorrect password. Try again.</p>
+  </div>
+  <div id="ownerPane" style="display:none;">
+    <p class="drawer-status">● Logged in as Owner</p>
+    <p style="font-size:.85rem;color:var(--cream-dim);">You can now upload photos throughout the site. Hover any photo box and tap "Upload". Photos go live for every visitor immediately.</p>
+    <button class="btn outline small" id="logoutBtn">Log Out</button>
+  </div>
+  <hr>
+  <a href="https://wa.me/254115531131" class="btn outline small" target="_blank" rel="noopener">Order on WhatsApp</a>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Karibu Nakuru</p>
+      <h1>Karibu Sana to<br>Mama Kitchen.<br>Nakuru's Hidden Gem.</h1>
+      <p class="tagline">"Pole pole, lakini chakula ni moto moto!" — Fresh, fiery, and full of love. That's how we do it in Nakuru.</p>
+      <div class="cta-row">
+        <a href="#menu" class="btn">See Our Menu</a>
+        <a href="#footer" class="btn outline">Find Us in Nakuru</a>
+      </div>
+    </div>
+    <div class="upload-frame" data-key="hero1">
+      <div class="placeholder"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><br>Upload Picture</div>
+      <img class="uploaded" alt="">
+      <div class="owner-controls">
+        <label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label>
+        <button class="btn outline small clear-btn">Clear</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap about-grid reveal">
+    <div>
+      <p class="eyebrow">About Us</p>
+      <h2>Karibu Nakuru,<br>Karibu Familia!</h2>
+      <p>We are a small family-owned restaurant right in the heart of Nakuru that has grown into a place where locals and visitors come together to enjoy authentic Kenyan meals made with love and fresh ingredients from our own backyard and local farmers.</p>
+      <p>No fancy stuff. Just honest, delicious food that reminds you why Kenyan cuisine is world-class. We cook slow, so you can eat up and leave with a full belly and a happy heart.</p>
+      <p class="about-note">NB: The owner can log in via the ☰ icon and upload photos directly — changes appear live on the site.</p>
+    </div>
+    <div class="upload-frame" data-key="about1">
+      <div class="placeholder"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><br>Upload Picture</div>
+      <img class="uploaded" alt="">
+      <div class="owner-controls">
+        <label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label>
+        <button class="btn outline small clear-btn">Clear</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHAT TO TRY ================= -->
+<section id="try">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Signature Dishes</p>
+      <h2>What to Try</h2>
+      <p style="color:var(--cream-dim);">Don't know where to start? Here's what our regulars are loving.</p>
+    </div>
+    <div class="dish-grid reveal">
+      <div class="dish-card">
+        <div class="upload-frame" data-key="dish1">
+          <div class="placeholder">Upload Photo</div><img class="uploaded" alt="">
+          <div class="owner-controls"><label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label><button class="btn outline small clear-btn">Clear</button></div>
+        </div>
+        <div class="dish-body"><h3>Nyama Choma Special</h3><p>Tender goat or beef grilled over charcoal the real Kenyan way. Served with kachumbari that bites back.</p></div>
+      </div>
+      <div class="dish-card">
+        <div class="upload-frame" data-key="dish2">
+          <div class="placeholder">Upload Photo</div><img class="uploaded" alt="">
+          <div class="owner-controls"><label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label><button class="btn outline small clear-btn">Clear</button></div>
+        </div>
+        <div class="dish-body"><h3>Mama's Ugali & Greens</h3><p>Soft ugali with buttery sukuma wiki or mrenda. Simple, comforting, addictive.</p></div>
+      </div>
+      <div class="dish-card">
+        <div class="upload-frame" data-key="dish3">
+          <div class="placeholder">Upload Photo</div><img class="uploaded" alt="">
+          <div class="owner-controls"><label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label><button class="btn outline small clear-btn">Clear</button></div>
+        </div>
+        <div class="dish-body"><h3>Githeri Power Bowl</h3><p>Beans and maize cooked to perfection with coconut milk and spices. The ultimate Kenyan comfort food.</p></div>
+      </div>
+      <div class="dish-card">
+        <div class="upload-frame" data-key="dish4">
+          <div class="placeholder">Upload Photo</div><img class="uploaded" alt="">
+          <div class="owner-controls"><label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label><button class="btn outline small clear-btn">Clear</button></div>
+        </div>
+        <div class="dish-body"><h3>Fish Fry (Tilapia / Mudfish)</h3><p>Crispy outside, juicy inside, straight from the lake.</p></div>
+      </div>
+      <div class="dish-card">
+        <div class="upload-frame" data-key="dish5">
+          <div class="placeholder">Upload Photo</div><img class="uploaded" alt="">
+          <div class="owner-controls"><label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label><button class="btn outline small clear-btn">Clear</button></div>
+        </div>
+        <div class="dish-body"><h3>Kienyeji Chicken Stew</h3><p>Slow-cooked free-range chicken in a rich tomato gravy.</p></div>
+      </div>
+      <div class="dish-card">
+        <div class="upload-frame" data-key="dish6">
+          <div class="placeholder">Upload Photo</div><img class="uploaded" alt="">
+          <div class="owner-controls"><label class="btn small">Upload<input type="file" accept="image/*" class="upload-input"></label><button class="btn outline small clear-btn">Clear</button></div>
+        </div>
+        <div class="dish-body"><h3>Chai & Mandazi Combo</h3><p>For that perfect mid-afternoon or breakfast vibe.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY PEOPLE LOVE US ================= -->
+<section id="love" style="background:var(--char2);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Testimonials</p>
+      <h2>Why People Love Us</h2>
+    </div>
+    <div class="quote-grid reveal">
+      <div class="quote-card"><p>The best nyama choma in Nakuru, hands down. The meat is always soft and the mchele is perfect!</p></div>
+      <div class="quote-card"><p>Felt like I was eating at my grandmother's house. Portion sizes are generous and the service is warm.</p></div>
+      <div class="quote-card stat"><div class="num">⭐ Fast</div><div>Affordable, tasty and fast — my new lunch spot every Friday!</div></div>
+      <div class="quote-card stat"><div class="num">Asante Sana</div><div>For making us your favorite spot.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPECIAL OFFERS ================= -->
+<section id="offers">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Special Offers / Events</p>
+      <h2>This Week at Mama Kitchen</h2>
+    </div>
+    <div class="offer-grid reveal">
+      <div class="offer-card">
+        <p class="eyebrow">Wednesdays</p>
+        <h3>Nyama Night</h3>
+        <p>Buy 1kg of grilled meat and get extra kachumbari free!</p>
+      </div>
+      <div class="offer-card">
+        <p class="eyebrow">Anytime</p>
+        <h3>Family Meal Deal</h3>
+        <p>Feed 4 people for the price of 3 — perfect for a Sunday gathering.</p>
+      </div>
+      <div class="offer-card">
+        <p class="eyebrow">Daily</p>
+        <h3>Takeaway & Delivery</h3>
+        <p>We bring the heat to your door. Order via WhatsApp and we'll handle the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MENU ================= -->
+<section id="menu" style="background:var(--char2);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">"Usikose" — Don't miss out on the best food in town</p>
+      <h2>See Our Menu</h2>
+    </div>
+
+    <div class="menu-tabs reveal">
+      <button class="tab-btn active" data-tab="breakfast">Breakfast / Asubuhi</button>
+      <button class="tab-btn" data-tab="starters">Starters / Vibaridi</button>
+      <button class="tab-btn" data-tab="grills">Grills & Nyama Choma</button>
+      <button class="tab-btn" data-tab="stews">Stews & Wetfry / Mchuzi</button>
+      <button class="tab-btn" data-tab="sides">Sides / Accompaniments</button>
+      <button class="tab-btn" data-tab="drinks">Drinks / Vinywaji</button>
+    </div>
+
+    <div class="reveal">
+      <div class="menu-cat active" id="cat-breakfast">
+        <h3>Breakfast · 7AM – 11AM</h3>
+        <ul class="menu-list">
+          <li class="menu-row"><span><span class="name">Chai &amp; Mandazi</span><a href="https://wa.me/254115531131" class="book-link">Book now</a></span><span class="price">Ksh 150</span></li>
+          <li class="menu-row"><span><span class="name">Mayai Mbili na Chapati</span><a href="https://wa.me/254115531131" class="book-link">Book now</a></span><span class="price">Ksh 250</span></li>
+          <li class="menu-row"><span><span class="name">Mbaazi ya Nazi</span><a href="https://wa.me/254115531131" class="book-link">Book now</a></span><span class="price">Ksh 280</span></li>
+          <li class="menu-row"><span><span class="name">Oatmeal or Ugali Special</span><a href="https://wa.me/254115531131" class="book-link">Book now</a></span><span class="price">Ksh 200</span></li>
+        </ul>
+      </div>
+
+      <div class="menu-cat" id="cat-starters">
+        <h3>Starters / Vibaridi (Appetizers)</h3>
+        <ul class="menu-list">
+          <li class="menu-row"><span class="name">Kachumbari Fresh</span><span class="price">Ksh 120</span></li>
+          <li class="menu-row"><span class="name">Mshikaki <span class="sub">Beef or Goat skewers</span></span><span class="price">Ksh 250</span></li>
+          <li class="menu-row"><span class="name">Samosa <span class="sub">Beef or Veg</span></span><span class="price">Ksh 200</span></li>
+          <li class="menu-row"><span class="name">Mutura</span><span class="price">Ksh 300</span></li>
+          <li class="menu-row"><span class="name">Viazi Karai</span><span class="price">Ksh 180</span></li>
+        </ul>
+      </div>
+
+      <div class="menu-cat" id="cat-grills">
+        <h3>Grills &amp; Nyama Choma</h3>
+        <ul class="menu-list">
+          <li class="menu-row"><span class="name">Nyama Choma <span class="sub">Beef</span></span><span class="price">½kg Ksh 650 · 1kg Ksh 1,200</span></li>
+          <li class="menu-row"><span class="name">Mbuzi Choma</span><span class="price">½kg Ksh 750 · 1kg Ksh 1,400</span></li>
+          <li class="menu-row"><span class="name">Kuku Choma</span><span class="price">½ Ksh 650 · 1 Ksh 1,200</span></li>
+          <li class="menu-row"><span class="name">Mixed Grill Platter</span><span class="price">Ksh 1,800</span></li>
+          <li class="menu-row"><span class="name">Fish Choma</span><span class="price">Ksh 650</span></li>
+        </ul>
+      </div>
+
+      <div class="menu-cat" id="cat-stews">
+        <h3>Stews &amp; Wetfry / Mchuzi</h3>
+        <ul class="menu-list">
+          <li class="menu-row"><span class="name">Kuku Wet Fry</span><span class="price">Ksh 550</span></li>
+          <li class="menu-row"><span class="name">Beef Wet Fry</span><span class="price">Ksh 450</span></li>
+          <li class="menu-row"><span class="name">Mbuzi Fry <span class="sub">Goat meat stew</span></span><span class="price">Ksh 550</span></li>
+          <li class="menu-row"><span class="name">Tilapia Wet Fry</span><span class="price">Ksh 500</span></li>
+          <li class="menu-row"><span class="name">Matumbo</span><span class="price">Ksh 400</span></li>
+        </ul>
+      </div>
+
+      <div class="menu-cat" id="cat-sides">
+        <h3>Sides / Accompaniments</h3>
+        <ul class="menu-list">
+          <li class="menu-row"><span class="name">Ugali <span class="sub">large</span></span><span class="price">Ksh 100</span></li>
+          <li class="menu-row"><span class="name">Chapati <span class="sub">2pcs</span></span><span class="price">Ksh 100</span></li>
+          <li class="menu-row"><span class="name">Rice</span><span class="price">Ksh 150</span></li>
+          <li class="menu-row"><span class="name">Chips</span><span class="price">Ksh 150</span></li>
+          <li class="menu-row"><span class="name">Kachumbari</span><span class="price">Ksh 80</span></li>
+        </ul>
+      </div>
+
+      <div class="menu-cat" id="cat-drinks">
+        <h3>Drinks / Vinywaji</h3>
+        <ul class="menu-list">
+          <li class="menu-row"><span class="name">Fresh Chai</span><span class="price">Ksh 50</span></li>
+          <li class="menu-row"><span class="name">Fresh Juice</span><span class="price">Ksh 150</span></li>
+          <li class="menu-row"><span class="name">Maziwa</span><span class="price">Ksh 100</span></li>
+          <li class="menu-row"><span class="name">Soda</span><span class="price">Ksh 100</span></li>
+          <li class="menu-row"><span class="name">Water</span><span class="price">Ksh 50</span></li>
+          <li class="menu-row"><span class="name">Kenyan Coffee</span><span class="price">Ksh 120</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p class="eyebrow">Final Call to Action</p>
+      <h2>Tuko Tayari<br>Kukupokea</h2>
+      <p class="swahili">We are ready to welcome you.</p>
+      <p style="color:var(--cream-dim);max-width:380px;">"Usikose" — don't miss out on the best food in town. Come once, you'll come again. Karibu tena!</p>
+      <a href="#hero" class="btn outline" style="margin-top:10px;">Back to Top</a>
+    </div>
+    <div>
+      <h3 style="font-size:1.1rem;">Visit / Contact</h3>
+      <ul class="contact-list">
+        <li>📍 Nakuru, Kenya</li>
+        <li>🕒 Open Daily, 7AM – 10PM</li>
+        <li>📞 Call / WhatsApp: <a href="https://wa.me/254115531131">0115 531 131</a></li>
+      </ul>
+      <a href="#menu" class="btn small">See Menu</a>
+    </div>
+    <div>
+      <h3 style="font-size:1.1rem;">Find Us in Nakuru</h3>
+      <div class="map-frame">
+        <iframe loading="lazy" src="https://www.google.com/maps?q=Nakuru,Kenya&output=embed" title="Map to Mama Kitchen Nakuru"></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© <span id="year"></span> Mama Kitchen Nakuru. All rights reserved.</span>
+    <span>Built with ♥ for Nakuru</span>
+  </div>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/254115531131" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.07-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.62-1.27 1.18-1.75 1.25-.45.07-1 .1-1.62-.1-.37-.12-.85-.27-1.46-.53-2.57-1.11-4.24-3.69-4.37-3.87-.13-.17-1.05-1.39-1.05-2.66 0-1.26.66-1.88.9-2.13.22-.25.5-.31.66-.31.17 0 .33 0 .47.01.15.01.35-.06.55.42.22.52.74 1.8.8 1.93.07.13.11.28.02.45-.09.17-.13.28-.27.43-.13.15-.28.34-.4.46-.13.13-.27.27-.12.53.15.27.67 1.1 1.43 1.78.99.88 1.82 1.15 2.08 1.28.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.25.09 1.57.74 1.84.88.27.13.45.2.51.31.07.13.07.7-.15 1.32z"/></svg>
+</a>
+
+<script>
+  // ---------- Year ----------
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---------- Owner login (CMS) ----------
+  const PASSWORD = "Manu@640";
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawerOverlay');
+  const loginPane = document.getElementById('loginPane');
+  const ownerPane = document.getElementById('ownerPane');
+  const loginError = document.getElementById('loginError');
+
+  function openDrawer(){ drawer.classList.add('open'); overlay.classList.add('open'); }
+  function closeDrawer(){ drawer.classList.remove('open'); overlay.classList.remove('open'); }
+
+  document.getElementById('drawerToggle').addEventListener('click', openDrawer);
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+
+  function setOwnerMode(on){
+    document.body.classList.toggle('owner-mode', on);
+    loginPane.style.display = on ? 'none' : 'block';
+    ownerPane.style.display = on ? 'block' : 'none';
+    localStorage.setItem('mk_owner', on ? '1' : '0');
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const val = document.getElementById('ownerPass').value;
+    if (val === PASSWORD) {
+      loginError.style.display = 'none';
+      setOwnerMode(true);
+    } else {
+      loginError.style.display = 'block';
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => setOwnerMode(false));
+
+  // restore session
+  if (localStorage.getItem('mk_owner') === '1') setOwnerMode(true);
+
+  // ---------- Image upload (Cloudinary — live for every visitor) ----------
+  const CLOUD_NAME = "dnlbyjize";
+  const UPLOAD_PRESET = "mamakitchen";
+
+  function cloudinaryUrl(key){
+    // deterministic public_id per slot so every visitor loads the same image
+    return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/mamakitchen/${key}.jpg`;
+  }
+
+  function loadImages(){
+    document.querySelectorAll('.upload-frame[data-key]').forEach(frame => {
+      const key = frame.dataset.key;
+      const imgEl = frame.querySelector('img.uploaded');
+      const placeholder = frame.querySelector('.placeholder');
+      const url = cloudinaryUrl(key) + '?t=' + Date.now(); // cache-bust so updates show immediately
+
+      imgEl.onload = () => {
+        imgEl.style.display = 'block';
+        placeholder.style.display = 'none';
+      };
+      imgEl.onerror = () => {
+        imgEl.style.display = 'none';
+        placeholder.style.display = 'flex';
+      };
+      imgEl.src = url;
+    });
+  }
+
+  document.querySelectorAll('.upload-input').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const frame = e.target.closest('.upload-frame');
+      const key = frame.dataset.key;
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const placeholder = frame.querySelector('.placeholder');
+      const originalText = placeholder.innerHTML;
+      placeholder.innerHTML = 'Uploading…';
+      placeholder.style.display = 'flex';
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
+      formData.append('public_id', key);
+      formData.append('folder', 'mamakitchen');
+
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.secure_url) {
+            loadImages();
+          } else {
+            throw new Error(data.error ? data.error.message : 'Upload failed');
+          }
+        })
+        .catch(err => {
+          alert('Upload failed: ' + err.message);
+          placeholder.innerHTML = originalText;
+        });
+    });
+  });
+
+  document.querySelectorAll('.clear-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      alert('To remove a photo, delete it from your Cloudinary Media Library (folder: mamakitchen). It will revert to the placeholder here automatically.');
+    });
+  });
+
+  loadImages();
+
+  // ---------- Menu tabs ----------
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.menu-cat').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('cat-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- Scroll reveal ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('shown'); io.unobserve(en.target); } });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
